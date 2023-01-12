@@ -18,9 +18,19 @@ async def social_network_activity():    # make async coroutine
 
     activity = {}
 
+    async def fetch(session, name, url):
+        async with session.get(url) as response:
+            try:
+                results = await response.json()
+                activity[name] = len(results)
+
+            except Exception as e:
+                print('Exception!', e)
+
+
     async with aiohttp.ClientSession() as session:
         tasks = [
-            fetch(activity, session, api['name'], api['url'])
+            fetch(session, api['name'], api['url'])
             for api in API_LIST
         ]
         await asyncio.gather(*tasks)
@@ -29,11 +39,3 @@ async def social_network_activity():    # make async coroutine
     return json_response
 
 
-async def fetch(activity, session, name, url):
-    async with session.get(url) as response:
-        try:
-            results = await response.json()
-            activity[name] = len(results)
-
-        except Exception as e:
-            print('Exception!', e)
