@@ -24,9 +24,17 @@ async def social_network_activity():    # make async coroutine
                 results = await response.json()
                 activity[name] = len(results)
 
-            except Exception as e:
-                print('Exception!', e)
+            except aiohttp.ContentTypeError as e:
+                # this is the expected Exception, when the GET request does
+                # not receive a properly formatted JSON
+                print('ContentTypeError!', e)
+                activity[name] = None
+                # `null` is the correcter way to pass it in JSON
 
+            except Exception as e:
+                # for all other Exceptions
+                print('Exception!', e)
+                activity[name] = -1
 
     async with aiohttp.ClientSession() as session:
         tasks = [
@@ -37,5 +45,3 @@ async def social_network_activity():    # make async coroutine
 
     json_response = jsonify(activity)
     return json_response
-
-
