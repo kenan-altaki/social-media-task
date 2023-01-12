@@ -2,6 +2,14 @@ import asyncio
 import aiohttp
 from flask import Flask, jsonify
 
+# List of API endpoints names and their urls to be queried.
+API_LIST = [
+    {'name': 'facebook', 'url': 'https://takehome.io/facebook'},
+    {'name': 'twitter', 'url': 'https://takehome.io/twitter'},
+    {'name': 'instagram', 'url': 'https://takehome.io/instagram'},
+]
+
+
 app = Flask(__name__)
 
 
@@ -12,11 +20,8 @@ async def social_network_activity():    # make async coroutine
 
     async with aiohttp.ClientSession() as session:
         tasks = [
-            fetch(activity, session, 'facebook',
-                  'https://takehome.io/facebook'),
-            fetch(activity, session, 'twitter', 'https://takehome.io/twitter'),
-            fetch(activity, session, 'instagram',
-                  'https://takehome.io/instagram'),
+            fetch(activity, session, api['name'], api['url'])
+            for api in API_LIST
         ]
         await asyncio.gather(*tasks)
 
