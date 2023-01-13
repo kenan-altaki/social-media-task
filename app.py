@@ -99,3 +99,15 @@ async def social_network_activity():    # make async coroutine
         await asyncio.gather(*tasks)
 
     return jsonify(activity), 200
+
+# =============================================================================
+# # Things for improvements:
+# =============================================================================
+# - Rate limiting to prevent overuse and abuse of the API. `ratelimiter`?.
+# - Logging? Using logging or structlog.
+# - Authentication and authorization, JWT?
+# - Caching? quicker response! better than hitting the endpoints multiple times.
+#       Flask-Cache or redis? But I don't want to open that can right now.
+# - Better and more detailed error messages for the client.
+#       to help them understand the cause of the error and how to fix it.
+# =============================================================================
